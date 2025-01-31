@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+    app:
+        build: .
+        ports:
+            - "8080:80" 
+        volumes:
+            - .:/var/www/html
+        environment:
+            - APP_ENV=local
+            - APP_DEBUG=true
+            - APP_KEY=base64:YOUR_APP_KEY_HERE
+        depends_on:
+            - db
+
+    db:
+        image: mysql:8.0
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: laravel
+            MYSQL_USER: laravel
+            MYSQL_PASSWORD: secret
+        volumes:
+            - dbdata:/var/lib/mysql
+
+volumes:
+    dbdata:
