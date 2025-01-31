@@ -39,6 +39,24 @@ export const useAuthStore = defineStore('auth', {
                 throw error;
             }
         },
+        async forgotPassword(payload) {
+            try {
+                await api.forgotPassword(payload);
+                this.message = 'Solicitação de redefinição de senha enviada com sucesso';
+            } catch (error) {
+                this.message = 'Erro ao solicitar redefinição de senha';
+                throw error;
+            }
+        },
+        async resetPassword(payload) {
+            try {
+                await api.resetPassword(payload);
+                this.message = 'Senha redefinida com sucesso';
+            } catch (error) {
+                this.message = 'Erro ao redefinir a senha';
+                throw error;
+            }
+        },
         clearAuthData() {
             this.token = null;
             this.user = null;
@@ -53,7 +71,7 @@ export const useAuthStore = defineStore('auth', {
             if (timeRemaining > 0) {
                 setTimeout(() => {
                     this.clearAuthData();
-                    this.message = 'Sua sessão expirou. Por favor, faça login novamente.'; // Definindo a mensagem de expiração
+                    this.message = 'Sua sessão expirou. Por favor, faça login novamente.';
                 }, timeRemaining);
             } else {
                 this.clearAuthData();

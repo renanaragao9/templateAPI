@@ -27,5 +27,11 @@ export default {
     },
     getUser() {
         return apiClient.get('/user');
+    },
+    forgotPassword(payload) {
+        return apiClient.post('/password/email', payload);
+    },
+    resetPassword(payload) {
+        return apiClient.post('/password/reset', payload);
     }
 };

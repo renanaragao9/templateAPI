@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\ResetPasswordNotification;
+use App\Notifications\CreateUserNotification;
+use Illuminate\Support\Facades\Route;
 
 
 class User extends Authenticatable
@@ -43,4 +46,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $url = env('VUE_APP_API_URL') . '/nova-senha?token=' . $token . '&email=' . $this->email;
+
+        $routeName = explode('.', Route::currentRouteName())[0];
+
+        if ($routeName === 'users') {
+            $this->notify(new CreateUserNotification($url, $this->name));
+        } else {
+            $this->notify(new ResetPasswordNotification($url));
+        }
+    }
 }

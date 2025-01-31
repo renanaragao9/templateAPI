@@ -45,7 +45,7 @@ const handleLogin = async () => {
     <FloatingConfigurator />
     <Toast />
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
-        <div class="flex flex-col items-center justify-center">
+        <div class="flex flex-col items-center justify-center mt-3">
             <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
                 <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
                     <div class="text-center mb-8">
@@ -65,7 +65,7 @@ const handleLogin = async () => {
                                 <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>
                                 <label for="rememberme1">Lembrar-me</label>
                             </div>
-                            <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Esqueceu a senha?</span>
+                            <router-link to="/redefinir-senha" class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Esqueceu a senha?</router-link>
                         </div>
                         <Button :label="isLoading ? 'Entrando...' : 'Entrar'" class="w-full" :disabled="isLoading" @click="handleLogin">
                             <i v-if="isLoading" class="pi pi-spinner pi-spin"></i>

@@ -2,63 +2,78 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Services\Auth\LoginService;
+use App\Services\Auth\RegisterService;
+use App\Services\Auth\LogoutService;
+use App\Http\Requests\ResetPassword\ResetPasswordRequest;
+use App\Http\Requests\ResetPassword\SendPasswordResetRequest;
+use App\Services\ResetPassword\ResetPasswordService;
+use App\Services\ResetPassword\SendPasswordLinkService;
+use Illuminate\Http\JsonResponse;
 
-class AuthController extends Controller
+class AuthController extends BaseController
 {
-    public function register(Request $request)
+    protected $loginService;
+    protected $registerService;
+    protected $logoutService;
+
+    public function __construct(LoginService $loginService, RegisterService $registerService, LogoutService $logoutService)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
-
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
-        ]);
-
-        return response()->json([
-            'message' => 'Usuário registrado com sucesso.',
-            'user' => $user,
-        ], 201);
+        $this->loginService = $loginService;
+        $this->registerService = $registerService;
+        $this->logoutService = $logoutService;
     }
 
-    public function login(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $validated = $request->validated();
+        return $this->registerService->register($validated);
+    }
 
-        if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Usuário não registrado ou senha incorreta.'], 401);
-        }
-
-        $user = Auth::user();
-        $token = $user->createToken('API Token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Login realizado com sucesso.',
-            'token' => $token,
-            'user' => $user,
-        ]);
+    public function login(LoginRequest $request)
+    {
+        $credentials = $request->validated();
+        return $this->loginService->login($credentials);
     }
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-
-        return response()->json(['message' => 'Logout realizado com sucesso.']);
+        return $this->logoutService->logout($request->user());
     }
 
     public function user(Request $request)
     {
         return $request->user();
+    }
+
+    public function sendResetPasswordLink(
+        SendPasswordResetRequest $sendPasswordResetRequest,
+        SendPasswordLinkService $sendPasswordLinkService,
+    ): JsonResponse {
+        $data = $sendPasswordResetRequest->validated();
+        $response = $sendPasswordLinkService->run($data['email']);
+
+        if ($response['status'] === 'error') {
+            return $this->errorResponse([], $response['message']);
+        }
+
+        return $this->successResponse(null, $response['message']);
+    }
+
+    public function resetPassword(
+        ResetPasswordRequest $resetPasswordRequest,
+        ResetPasswordService $resetPasswordService
+    ): JsonResponse {
+        $data = $resetPasswordRequest->validated();
+        $response = $resetPasswordService->run($data);
+
+        if ($response['status'] === 'error') {
+            return $this->errorResponse([], $response['message']);
+        }
+
+        return $this->successResponse(null, $response['message']);
     }
 }

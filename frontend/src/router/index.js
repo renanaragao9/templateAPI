@@ -72,6 +72,16 @@ const routes = [
         path: '/register',
         name: 'register',
         component: () => import('@/views/Auth/Register.vue')
+    },
+    {
+        path: '/redefinir-senha',
+        name: 'ForgotPassword',
+        component: () => import('@/views/Auth/ForgotPassword.vue')
+    },
+    {
+        path: '/nova-senha',
+        name: 'ResetPassword',
+        component: () => import('@/views/Auth/ResetPassword.vue')
     }
 ];
 
