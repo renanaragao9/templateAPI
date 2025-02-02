@@ -28,6 +28,25 @@ export const useAuthStore = defineStore('auth', {
                 throw error;
             }
         },
+        async register(credentials) {
+            try {
+                const response = await api.register(credentials);
+                this.token = response.data.token;
+                this.user = response.data.user;
+
+                const expirationTime = Date.now() + 60 * 60 * 1000;
+                this.tokenExpiration = expirationTime;
+
+                localStorage.setItem('token', this.token);
+                localStorage.setItem('tokenExpiration', expirationTime);
+
+                this.startTokenTimeout();
+                this.message = 'Registro realizado com sucesso';
+            } catch (error) {
+                this.message = 'Falha no registro';
+                throw error;
+            }
+        },
         async logout() {
             try {
                 await api.logout();

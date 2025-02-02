@@ -78,6 +78,10 @@ const handleLogin = async () => {
                         <Button label="Login com Google" class="w-full md:w-auto" icon="pi pi-google" />
                         <Button label="Login com Outlook" class="w-full md:w-auto" icon="pi pi-microsoft" />
                     </div>
+                    <div class="text-center mt-4">
+                        <span>Ou se não possui cadastro, </span>
+                        <router-link to="/register" class="font-medium no-underline text-primary">cadastre-se aqui!</router-link>
+                    </div>
                     <footer class="text-center mt-8">
                         <p>Todos os direitos reservados do Joga Junto</p>
                         <p>Theme based on PrimeVue</p>

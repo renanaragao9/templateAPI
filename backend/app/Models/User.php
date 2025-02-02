@@ -56,7 +56,7 @@ class User extends Authenticatable
         if ($routeName === 'users') {
             $this->notify(new CreateUserNotification($url, $this->name));
         } else {
-            $this->notify(new ResetPasswordNotification($url));
+            $this->notify(new ResetPasswordNotification($url, $this->name));
         }
     }
 }
