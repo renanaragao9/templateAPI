@@ -1,22 +1,13 @@
 <script setup>
-import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { ref, onMounted } from 'vue';
-import { useAuthStore } from '@/stores/authStore';
 import { useToast } from 'primevue/usetoast';
+import { useAuthStore } from '@/stores/authStore';
 
 const email = ref('');
 const password = ref('');
-const checked = ref(false);
 const isLoading = ref(false);
-
-const authStore = useAuthStore();
 const toast = useToast();
-
-onMounted(() => {
-    if (authStore.isAuthenticated) {
-        window.location.href = '/';
-    }
-});
+const authStore = useAuthStore();
 
 const handleLogin = async () => {
     if (!email.value || !password.value) {
@@ -39,6 +30,25 @@ const handleLogin = async () => {
         isLoading.value = false;
     }
 };
+
+const handleGoogleLogin = () => {
+    authStore.redirectToGoogle();
+};
+
+// Captura o token da URL e chama handleSocialAuthCallback
+onMounted(async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    if (token) {
+        try {
+            await authStore.handleSocialAuthCallback(token);
+            toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Autenticação social realizada com sucesso!', life: 3000 });
+            window.location.href = '/';
+        } catch (error) {
+            toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha na autenticação social', life: 3000 });
+        }
+    }
+});
 </script>
 
 <template>
@@ -75,7 +85,7 @@ const handleLogin = async () => {
                         <Divider layout="horizontal" class="!flex md:!hidden" align="center"><b>OU</b></Divider>
                     </div>
                     <div class="flex flex-col md:flex-row items-center justify-center gap-4">
-                        <Button label="Login com Google" class="w-full md:w-auto" icon="pi pi-google" />
+                        <Button label="Login com Google" class="w-full md:w-auto" icon="pi pi-google" @click="handleGoogleLogin" />
                         <Button label="Login com Outlook" class="w-full md:w-auto" icon="pi pi-microsoft" />
                     </div>
                     <div class="text-center mt-4">

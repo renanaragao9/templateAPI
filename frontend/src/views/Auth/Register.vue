@@ -82,6 +82,10 @@ const handleRegister = async () => {
         isLoading.value = false;
     }
 };
+
+const redirectToGoogle = () => {
+    authStore.redirectToGoogle();
+};
 </script>
 
 <template>
@@ -158,7 +162,7 @@ const handleRegister = async () => {
                         <Divider layout="horizontal" class="!flex md:!hidden" align="center"><b>OU</b></Divider>
                     </div>
                     <div class="flex flex-col md:flex-row items-center justify-center gap-4">
-                        <Button label="Registrar com Google" class="w-full md:w-auto" icon="pi pi-google" />
+                        <Button label="Registrar com Google" class="w-full md:w-auto" icon="pi pi-google" @click="redirectToGoogle" target="_blank" />
                         <Button label="Registrar com Microsoft" class="w-full md:w-auto" icon="pi pi-microsoft" />
                     </div>
                     <div class="text-center mt-4">

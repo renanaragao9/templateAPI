@@ -11,7 +11,6 @@ use App\Notifications\ResetPasswordNotification;
 use App\Notifications\CreateUserNotification;
 use Illuminate\Support\Facades\Route;
 
-
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -25,6 +24,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'provider',
+        'provider_id',
+        'qtd_login',
+        'last_login',
     ];
 
     /**
@@ -45,6 +48,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'last_login' => 'datetime', // Adicionado
     ];
 
     public function sendPasswordResetNotification($token): void

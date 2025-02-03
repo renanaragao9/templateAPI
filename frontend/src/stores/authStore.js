@@ -123,6 +123,38 @@ export const useAuthStore = defineStore('auth', {
                 this.clearAuthData();
                 return false;
             }
+        },
+        async handleSocialAuthCallback(token) {
+            try {
+                if (!token) {
+                    throw new Error('Token não encontrado');
+                }
+
+                // Armazena o token no localStorage
+                this.token = token;
+                localStorage.setItem('token', token);
+
+                // Obtém os dados do usuário autenticado
+                const response = await api.get('/auth/user'); // Rota para obter o usuário autenticado
+                this.user = response.data.user;
+
+                const expirationTime = Date.now() + 60 * 60 * 1000; // 1 hora de expiração
+                this.tokenExpiration = expirationTime;
+                localStorage.setItem('tokenExpiration', expirationTime);
+
+                this.startTokenTimeout();
+                this.message = 'Autenticação social realizada com sucesso';
+
+                // Redireciona para a tela do front
+                window.location.href = '/'; // Certifique-se de que esta rota existe no seu frontend
+            } catch (error) {
+                this.message = 'Falha na autenticação social';
+                this.clearAuthData();
+                throw error;
+            }
+        },
+        redirectToGoogle() {
+            window.location.href = 'http://127.0.0.1:8000/api/auth/google';
         }
     },
     getters: {
