@@ -26,4 +26,13 @@ class RegisterRequest extends FormRequest
             ],
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'email.required' => 'O campo de email é obrigatório.',
+            'email.email' => 'Por favor, insira um endereço de email válido.',
+            'email.unique' => 'Este email já está em uso.',
+        ];
+    }
 }

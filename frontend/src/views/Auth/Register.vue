@@ -14,6 +14,8 @@ const isLoading = ref(false);
 const showPasswordRules = ref(false);
 const showConfirmPasswordRules = ref(false);
 const showSuccessLoader = ref(false);
+const showGoogleRegister = ref(false);
+const showMicrosoftRegister = ref(false);
 
 const authStore = useAuthStore();
 const toast = useToast();
@@ -125,7 +127,7 @@ const redirectToGoogle = () => {
                         </div>
 
                         <div class="col-span-12 md:col-span-6">
-                            <label for="confirmPassword" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Confirme a Senha</label>
+                            <label for="confirmPassword" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Confirme a senha</label>
                             <Password
                                 id="confirmPassword"
                                 v-model="confirmPassword"
@@ -162,13 +164,17 @@ const redirectToGoogle = () => {
                         <Divider layout="horizontal" class="!flex md:!hidden" align="center"><b>OU</b></Divider>
                     </div>
                     <div class="flex flex-col md:flex-row items-center justify-center gap-4">
-                        <Button label="Registrar com Google" class="w-full md:w-auto" icon="pi pi-google" @click="redirectToGoogle" target="_blank" />
-                        <Button label="Registrar com Microsoft" class="w-full md:w-auto" icon="pi pi-microsoft" />
+                        <Button v-if="showGoogleRegister" label="Registrar com Google" class="w-full md:w-auto" icon="pi pi-google" @click="redirectToGoogle" target="_blank" />
+                        <Button v-if="showMicrosoftRegister" label="Registrar com Microsoft" class="w-full md:w-auto" icon="pi pi-microsoft" />
                     </div>
                     <div class="text-center mt-4">
                         <span>Ou se já possui cadastro, </span>
                         <router-link to="/login" class="font-medium no-underline text-primary">faça login aqui!</router-link>
                     </div>
+                    <footer class="text-center mt-8">
+                        <p>Todos os direitos reservados do Joga Junto</p>
+                        <p>Theme based on PrimeVue</p>
+                    </footer>
                 </div>
             </div>
         </div>
@@ -177,10 +183,6 @@ const redirectToGoogle = () => {
         <ProgressSpinner />
         <p class="ml-4">Redirecionando...</p>
     </div>
-    <footer class="text-center mt-8">
-        <p>Todos os direitos reservados do Joga Junto</p>
-        <p>Theme based on PrimeVue</p>
-    </footer>
 </template>
 
 <style scoped>
@@ -206,11 +208,5 @@ const redirectToGoogle = () => {
 .password-rules-card:hover {
     transform: translateY(10px);
     opacity: 1;
-}
-
-footer {
-    color: var(--text-color);
-    background-color: var(--surface-50);
-    padding: 1rem;
 }
 </style>

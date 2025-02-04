@@ -8,6 +8,8 @@ const password = ref('');
 const isLoading = ref(false);
 const toast = useToast();
 const authStore = useAuthStore();
+const showGoogleLogin = ref(false);
+const showOutlookLogin = ref(false);
 
 const handleLogin = async () => {
     if (!email.value || !password.value) {
@@ -35,7 +37,6 @@ const handleGoogleLogin = () => {
     authStore.redirectToGoogle();
 };
 
-// Captura o token da URL e chama handleSocialAuthCallback
 onMounted(async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
@@ -85,8 +86,8 @@ onMounted(async () => {
                         <Divider layout="horizontal" class="!flex md:!hidden" align="center"><b>OU</b></Divider>
                     </div>
                     <div class="flex flex-col md:flex-row items-center justify-center gap-4">
-                        <Button label="Login com Google" class="w-full md:w-auto" icon="pi pi-google" @click="handleGoogleLogin" />
-                        <Button label="Login com Outlook" class="w-full md:w-auto" icon="pi pi-microsoft" />
+                        <Button v-if="showGoogleLogin" label="Login com Google" class="w-full md:w-auto" icon="pi pi-google" @click="handleGoogleLogin" />
+                        <Button v-if="showOutlookLogin" label="Login com Outlook" class="w-full md:w-auto" icon="pi pi-microsoft" />
                     </div>
                     <div class="text-center mt-4">
                         <span>Ou se não possui cadastro, </span>
